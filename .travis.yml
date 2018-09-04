@@ -18,11 +18,10 @@ after_success:
 - git config user.email "wuchengqi577@gmail.com"
 - git add .
 - git commit -m "Update site"
-- git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:gh-pages
+- git push --force --quiet "https://${TOKEN}@${GH_REF}" master:gh-pages
 branches:
   only:
   - dev
 env:
   global:
   - GH_REF: github.com/chengqiwu/cz.github.io.git
-  - secure: fdMvd3IqNkgN54ZPNMmxxrORSDA3XWOMzJHepiDe9+n1Z0a0AOAZDd/9oQ8M6vVTDityaDZmTObR92jo1F6AaUt37xKGsag//iJ2NsmAuF0tbNMiLY3HkMnQn+cjLZ1wHJpbKbB+46RQS/swf3CgASnn8jQlHQcFdPXEXG+3N6dLKHmgfjj9/jMaakb7kXFBE6W1zYcMAmZTe4JeAcKAgX1t/KW4TcmgL4/PDBRwOBQLvvhE3x7wpIV4GPG31oaQJPNz0oHiry1Qy/s403498Z0wvvwfzvyXW7l+kaD9G2zyWp//3uAhgs0iXtMgbrhKZLd2gk0anLHAZwWJz+VVCT7Tvv8mzY8veBZsFn1u9Nyh05OQjGE1gBvrcm1J9A3Rpu4foR3bnaamywjSXTq8tL6Mh1Wlk78bsJP1bH9ozX25jNwCMFO0cnFqvf1Vbfg9NAkPfTVpRI4LrEW2aFNU10uAe9NSIDzD+BzhaJ7UZ91C78PlI/9e8ZmF5nDhax8VvuMRJnzGNy/k213bUE9yapkP7QJCELpQcb4sQpIvCdfSCpW6oMJyPKrp2yx8H1MaG2uC1bebSBb/1wy8pCt1CsKO8lzEG08dX2JQc+ODSsfoUwVvvhn2mtSz8sP0RQTY3D0Dqh2UpXJkVyJQTMnrn/shydrhR5rRg2Uv3Y3O7cQ=
