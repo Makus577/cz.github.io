@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/cz.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/cz.github.io/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/cz.github.io/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/cz.github.io/images/favicon-32x32-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/cz.github.io/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/cz.github.io/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/cz.github.io/',
+    scheme: 'Muse',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="费了一天时间终于把Travis搞明白了，生命在于折腾 hexo的弊端   hexo每次更新文章，都特别的繁琐，必须经历以下命令    123hexo cleanhexo generatehexo deploy    看起来特别麻烦，如果当我们更改好文章，push到github上之后，能自动执行上面代码，这样会优化很多不必要的时间 Travis CI工具   针对于以上的弊端，Travis CI工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="travis">
+<meta property="og:url" content="http://yoursite.com/2018/09/04/travis/index.html">
+<meta property="og:site_name" content="橙子前端">
+<meta property="og:description" content="费了一天时间终于把Travis搞明白了，生命在于折腾 hexo的弊端   hexo每次更新文章，都特别的繁琐，必须经历以下命令    123hexo cleanhexo generatehexo deploy    看起来特别麻烦，如果当我们更改好文章，push到github上之后，能自动执行上面代码，这样会优化很多不必要的时间 Travis CI工具   针对于以上的弊端，Travis CI工具">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-09-27T07:10:36.220Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="travis">
+<meta name="twitter:description" content="费了一天时间终于把Travis搞明白了，生命在于折腾 hexo的弊端   hexo每次更新文章，都特别的繁琐，必须经历以下命令    123hexo cleanhexo generatehexo deploy    看起来特别麻烦，如果当我们更改好文章，push到github上之后，能自动执行上面代码，这样会优化很多不必要的时间 Travis CI工具   针对于以上的弊端，Travis CI工具">
+
+
+
+  <link rel="alternate" href="/cz.github.io/atom.xml" title="橙子前端" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/04/travis/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>travis | 橙子前端</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/cz.github.io/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">橙子前端</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/cz.github.io/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/cz.github.io/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/cz.github.io/2018/09/04/travis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="橙 子">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/cz.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="橙子前端">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">travis
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-09-04 18:01:14" itemprop="dateCreated datePublished" datetime="2018-09-04T18:01:14+00:00">2018-09-04</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-09-27 07:10:36" itemprop="dateModified" datetime="2018-09-27T07:10:36+00:00">2018-09-27</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>费了一天时间终于把Travis搞明白了，生命在于折腾</p>
+<h2 id="hexo的弊端"><a href="#hexo的弊端" class="headerlink" title="hexo的弊端"></a>hexo的弊端</h2><p>   hexo每次更新文章，都特别的繁琐，必须经历以下命令<br>    <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure></p>
+<p>   看起来特别麻烦，如果当我们更改好文章，push到github上之后，能自动执行上面代码，这样会优化很多不必要的时间</p>
+<h2 id="Travis-CI工具"><a href="#Travis-CI工具" class="headerlink" title="Travis CI工具"></a>Travis CI工具</h2><p>   针对于以上的弊端，Travis CI工具可以很好的解决。首先Travis CI提供了持续集成服务，其实这里并没有用到它的CI服务，而是通过监听分支提交的动态，在集成成功后执行自定义的部署逻辑。</p>
+<blockquote>
+<p>持续集成是一种软件开发实践，即团队开发成员经常集成他们的工作，通过每个成员每天至少集成一次，也就意味着每天可能会发生多次集成。每次集成都通过自动化的构建（包括编译，发布，自动化测试）来验证，从而尽早地发现集成错误。</p>
+</blockquote>
+<p>   网上教程很多，首先，你需要两个分支，一是主开发分支（dev），二是生成环境分支（gh-pages）<br>   首先，我们从0开始搭建hexo</p>
+<ol>
+<li>安装git</li>
+<li>安装node（npm）或者yarn</li>
+<li>全局安装hexo</li>
+<li>新建文件夹并cd到文件夹，git init创建git环境</li>
+<li>新建分支dev，在dev分支上初始化hexo</li>
+<li>生成public文件</li>
+<li>新建分支gh-pages，把public的内容放到该分支下</li>
+<li>在github上面新建你的仓库</li>
+<li>在setting选项中，选择你的github pages分支</li>
+<li>现在就好了，其中可能注意几个地方如下<blockquote>
+<ul>
+<li>文件夹根目录下的<code>_config.yml</code>，需要修改repo里面的信息</li>
+<li>github Pages会存在二级目录，所以需要设置</li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<p>这里就搭建好hexo了，现在开始搞Travis<br>首先在dev分支的根目录下新建一个<code>.travis.yml</code><br>这里有一个样本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">language: node_js</span><br><span class="line">node_js: stable</span><br><span class="line"></span><br><span class="line">addons: # Travis CI建议加的，自动更新api</span><br><span class="line">  apt:</span><br><span class="line">    update: true</span><br><span class="line"></span><br><span class="line">cache:</span><br><span class="line">  directories: </span><br><span class="line">  - node_modules # 缓存 node_modules</span><br><span class="line"></span><br><span class="line">install:</span><br><span class="line">- npm install # 初次安装，在CI环境中，执行安装npm依赖</span><br><span class="line"></span><br><span class="line"># before_script: </span><br><span class="line"></span><br><span class="line">script:</span><br><span class="line">- hexo g # 执行 hexo generate，把文章编译到public中</span><br><span class="line"></span><br><span class="line">after_success: # 执行script成功后，进入到public，把里面的代码提交到博客的gh-pages分支</span><br><span class="line">- cd ./public</span><br><span class="line">- git init</span><br><span class="line">- git config user.name &quot;Yuying Wu&quot;</span><br><span class="line">- git config user.email &quot;wuyuying1128@gmail.com&quot;</span><br><span class="line">- git add .</span><br><span class="line">- git commit -m &quot;Update site&quot;</span><br><span class="line">- git push --force --quiet &quot;https://$&#123;GH_TOKEN&#125;@$&#123;GH_REF&#125;&quot; master:gh-pages</span><br><span class="line"></span><br><span class="line">branches:</span><br><span class="line">  only:</span><br><span class="line">  - dev # CI 只针对分支 dev</span><br><span class="line"></span><br><span class="line">env:</span><br><span class="line">  global: # 全局变量，上面的提交到github的命令有用到</span><br><span class="line">  - GH_REF: github.com/YuyingWu/blog.git</span><br><span class="line">  - secure: </span><br><span class="line"># secure是自动生成的，执行`travis encrypt &apos;GH_TOKEN=$&#123;your_github_personal_access_token&#125;&apos; --add`</span><br></pre></td></tr></table></figure></p>
+<p>其中解释一下最后一段注释，github提交需要github access token的生成和加密<br>这里有另外一个简便方法，但都需要github access token</p>
+<ol>
+<li>首先生成github的<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Personal Access Tokens</a><br>记住你的token码</li>
+<li><p>安装Travis CI </p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gem install travis</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加密<br>登陆一下（<code>travis login</code>），输入github的用户名密码，然后再执行<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">travis encrypt &apos;GH_TOKEN=$&#123;your_github_personal_access_token&#125;&apos; --add</span><br></pre></td></tr></table></figure></p>
+<p>这里执行之后，会发现.travis.yml文件会刷新，并生成env.global.secure的值</p>
+</li>
+</ol>
+<p>登陆Travis CI的官网，登陆github，找到对应的项目仓库，打开它<br>然后每次当你git push dev分支的内容，Travis就会自动化执行，并刷新到github仓库的gh-pages分支。<br>神奇！！！！</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/cz.github.io/2018/09/04/requestAnimationFrame/" rel="next" title="requestAnimationFrame">
+                <i class="fa fa-chevron-left"></i> requestAnimationFrame
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/cz.github.io/2018/09/05/精禾项目/" rel="prev" title="精禾项目">
+                精禾项目 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">橙 子</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/cz.github.io/archives/">
+                
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/cz.github.io/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#hexo的弊端"><span class="nav-number">1.</span> <span class="nav-text">hexo的弊端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Travis-CI工具"><span class="nav-number">2.</span> <span class="nav-text">Travis CI工具</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">橙 子</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.4.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/cz.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cz.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cz.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/cz.github.io/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/cz.github.io/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/cz.github.io/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/cz.github.io/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/cz.github.io/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
